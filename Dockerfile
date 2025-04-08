@@ -16,7 +16,7 @@ RUN $JAVA_HOME/bin/jlink \
          --compress=2 \
          --output /javaruntime
 
-FROM debian:latest
+FROM debian:12-slim
 WORKDIR /
 COPY --from=build-jre /javaruntime /javaruntime
 COPY --from=build-app /app.jar .
