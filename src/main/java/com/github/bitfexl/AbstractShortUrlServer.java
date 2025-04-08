@@ -6,6 +6,8 @@ import io.undertow.util.Headers;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Deque;
 
 public abstract class AbstractShortUrlServer implements Closeable {
@@ -13,8 +15,16 @@ public abstract class AbstractShortUrlServer implements Closeable {
 
     private final Undertow httpServer;
 
+    private byte[] indexHTML;
+
     public AbstractShortUrlServer(int port, String baseUrl) {
         this.baseUrl = baseUrl;
+
+        try (final InputStream in = getClass().getResourceAsStream("/index.html")) {
+            indexHTML = in.readAllBytes();
+        } catch (Exception ex) {
+            indexHTML = null;
+        }
 
         httpServer = Undertow.builder()
                 .addHttpListener(port, "localhost")
@@ -31,6 +41,12 @@ public abstract class AbstractShortUrlServer implements Closeable {
 
     private void handleRequest(HttpServerExchange exchange) {
         final String path = exchange.getRequestPath();
+
+        // --- index html file ---
+        if (indexHTML != null && path.equalsIgnoreCase("/")) {
+            exchange.getResponseSender().send(ByteBuffer.wrap(indexHTML));
+            return;
+        }
 
         // --- debug ping/server health check ---
 
@@ -54,7 +70,12 @@ public abstract class AbstractShortUrlServer implements Closeable {
 
             final Deque<String> caseInsensitive = exchange.getQueryParameters().get("caseInsensitive");
 
-            // todo: check domain
+            // check if url is accepted
+            if (!checkUrl(url)) {
+                exchange.setStatusCode(400);
+                exchange.getResponseSender().close();
+                return;
+            }
 
             final String newKey = storeUrl(url, caseInsensitive != null);
 
@@ -82,4 +103,6 @@ public abstract class AbstractShortUrlServer implements Closeable {
     protected abstract String storeUrl(String url, boolean caseInsensitive);
 
     protected abstract String retrieveUrl(String key);
+
+    protected abstract boolean checkUrl(String url);
 }

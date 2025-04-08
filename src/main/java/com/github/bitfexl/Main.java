@@ -38,6 +38,11 @@ public class Main {
                     return null;
                 }
             }
+
+            @Override
+            protected boolean checkUrl(String url) {
+                return true;
+            }
         };
 
         try (server; db) {
