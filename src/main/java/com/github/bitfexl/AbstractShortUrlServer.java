@@ -28,7 +28,7 @@ public abstract class AbstractShortUrlServer implements Closeable {
         }
 
         httpServer = Undertow.builder()
-                .addHttpListener(port, "localhost")
+                .addHttpListener(port, "0.0.0.0")
                 .setHandler(this::handleRequest)
                 .build();
 
