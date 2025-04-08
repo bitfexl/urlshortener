@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL-Shortener</title>
+</head>
+<body>
+    <h1>URL-Shortener</h1>
+    <form action="/short" method="get">
+        <p>
+            <label for="url">URL:</label>
+            <input type="text" id="url" name="url">
+        </p>
+        <p>
+            <label for="caseInsensitive">Case-Insensitive:</label>
+            <input type="checkbox" id="caseInsensitive" name="caseInsensitive" value="1">
+        </p>
+        <p>
+            <input type="submit" value="Shorten">
+        </p>
+    </form>
+</body>
+</html>
