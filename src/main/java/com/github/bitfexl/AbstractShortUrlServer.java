@@ -8,6 +8,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.time.Instant;
 import java.util.Deque;
 
 public abstract class AbstractShortUrlServer implements Closeable {
@@ -51,7 +52,7 @@ public abstract class AbstractShortUrlServer implements Closeable {
         // --- debug ping/server health check ---
 
         if (path.equalsIgnoreCase("/ping")) {
-            exchange.getResponseSender().send("pong");
+            exchange.getResponseSender().send("pong " + Instant.now());
             return;
         }
 
