@@ -74,7 +74,7 @@ public abstract class AbstractShortUrlServer implements Closeable {
             // check if url is accepted
             if (!checkUrl(url)) {
                 exchange.setStatusCode(400);
-                exchange.getResponseSender().close();
+                exchange.getResponseSender().send("Unable to accept the given url.");
                 return;
             }
 

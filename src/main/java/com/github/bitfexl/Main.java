@@ -3,16 +3,51 @@ package com.github.bitfexl;
 import org.rocksdb.RocksDBException;
 
 import java.io.IOException;
+import java.util.*;
 
 public class Main {
-    final static KeyGenerator keyGenerator = new KeyGenerator(7);
+    private static final KeyGenerator keyGenerator = new KeyGenerator(7);
 
-    final static Db db = new Db("db", "db-log");
+    private static final Db db = new Db("db", "db-log");
 
-    final static String URL_BASE = "http://localhost/";
+    private static final String BASE_URL = System.getenv("BASEURL");
+
+    private static final String DOMAINS = System.getenv("DOMAINS");
+
+    private static final boolean allDomains;
+
+    private static final Set<String> domains;
+
+    private static final List<String> parentDomains;
+
+    static {
+        if (DOMAINS == null) {
+            allDomains = true;
+            domains = null;
+            parentDomains = null;
+        } else {
+            allDomains = false;
+            domains = new HashSet<>();
+            parentDomains = new ArrayList<>();
+
+            for (String domain : DOMAINS.split(",")) {
+                domain = domain.trim().toLowerCase();
+                if (domain.isEmpty()) {
+                    continue;
+                }
+
+                if (domain.charAt(0) == '.') {
+                    parentDomains.add(domain);
+                    domains.add(domain.substring(1));
+                } else {
+                    domains.add(domain);
+                }
+            }
+        }
+    }
 
     public static void main(String[] args) throws IOException {
-        final AbstractShortUrlServer server = new AbstractShortUrlServer(80, URL_BASE) {
+        final AbstractShortUrlServer server = new AbstractShortUrlServer(80, BASE_URL != null ? BASE_URL : "") {
 
             @Override
             protected String storeUrl(String url, boolean caseInsensitive) {
@@ -41,7 +76,33 @@ public class Main {
 
             @Override
             protected boolean checkUrl(String url) {
-                return true;
+                url = url.toLowerCase();
+
+                if (url.startsWith("https://")) {
+                    url = url.substring(8);
+                } else if (url.startsWith("http://")) {
+                    url = url.substring(7);
+                } else {
+                    return false;
+                }
+
+                if (allDomains) {
+                    return true;
+                }
+
+                final String domain = url.split("/", 2)[0];
+
+                if (domains.contains(domain)) {
+                    return true;
+                }
+
+                for (String parentDomain : parentDomains) {
+                    if (domain.endsWith(parentDomain)) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         };
 
