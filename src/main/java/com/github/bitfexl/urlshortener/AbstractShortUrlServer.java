@@ -1,4 +1,4 @@
-package com.github.bitfexl;
+package com.github.bitfexl.urlshortener;
 
 import io.undertow.Undertow;
 import io.undertow.server.HttpServerExchange;

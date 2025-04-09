@@ -1,4 +1,4 @@
-package com.github.bitfexl;
+package com.github.bitfexl.urlshortener;
 
 /**
  * Generate a random key (letters only).

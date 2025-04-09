@@ -1,4 +1,4 @@
-package com.github.bitfexl;
+package com.github.bitfexl.urlshortener;
 
 import org.rocksdb.CompressionOptions;
 import org.rocksdb.Options;

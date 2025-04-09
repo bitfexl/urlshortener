@@ -1,4 +1,4 @@
-package com.github.bitfexl;
+package com.github.bitfexl.urlshortener;
 
 import org.rocksdb.RocksDBException;
 
@@ -47,8 +47,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        // TODO: move to "urlshortener" package
-
         final AbstractShortUrlServer server = new AbstractShortUrlServer(80, BASE_URL != null ? BASE_URL : "") {
 
             @Override

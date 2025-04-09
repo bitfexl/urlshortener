@@ -44,7 +44,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>com.github.bitfexl.Main</mainClass>
+                                    <mainClass>com.github.bitfexl.urlshortener.Main</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
