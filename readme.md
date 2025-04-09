@@ -54,6 +54,6 @@ docker run -d --name urlshortener -p 8080:80 -v urlshortener-db:/db -v urlshorte
 
 - `/` the http server serves a simple form for shortening urls
 - `/ping` a debug/health check returning `pong` and the current time
-- `/short?&url=LONG_URL_HERE` creates a short url for the given url (a-z,A-Z)
+- `/short?url=LONG_URL_HERE` creates a short url for the given url (a-z,A-Z)
 - `/short?caseInsensitive&url=LONG_URL_HERE` creates a case-insensitive short url for the given url (a-z, but may also be converted to upper case)
 - `/URL_ID_HERE` resolves the short url to the actual url (303 redirect)
