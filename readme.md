@@ -1,6 +1,6 @@
 # URL Shortener
 
-An easy to use url shortener with a http "api" written in java running inside a container.
+An easy to use url shortener with a http "api" written in java, running inside a container.
 
 ## Used libraries
 
@@ -39,10 +39,16 @@ DOMAINS=.wikipedia.org,google.com,www.google.com
 Will accept `wikipedia.org` and any subdomains (e.g. `en.wikipedia.org`). `google.com` and `www.google.com`
 but NOT `about.google.com` or `example.com`.
 
-## Volumes
+## Data directories/volumes
 
 - `/db` contains the RocksDB database
 - `/db-log` contains the logs from RocksDB
+
+## Complete example
+
+```shell
+docker run -d --name urlshortener -p 8080:80 -v urlshortener-db:/db -v urlshortener-db-log:/db-log -e DOMAINS=.wikipedia.org,google.com,www.google.com -e BASEURL=http://localhost:8080/ urlshortener
+```
 
 ## API
 
@@ -51,11 +57,3 @@ but NOT `about.google.com` or `example.com`.
 - `/short?&url=LONG_URL_HERE` creates a short url for the given url (a-z,A-Z)
 - `/short?caseInsensitive&url=LONG_URL_HERE` creates a case-insensitive short url for the given url (a-z, but may also be converted to upper case)
 - `/URL_ID_HERE` resolves the short url to the actual url (303 redirect)
-
-## Complete example
-
-```shell
-docker run -it --rm -p 8080:80 -e DOMAINS=.wikipedia.org,google.com,www.google.com -e BASEURL=http://localhost:8080/ urlshortener
-```
-
-todo: add volumes

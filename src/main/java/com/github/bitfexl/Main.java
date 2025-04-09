@@ -47,6 +47,8 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
+        // TODO: move to "urlshortener" package
+
         final AbstractShortUrlServer server = new AbstractShortUrlServer(80, BASE_URL != null ? BASE_URL : "") {
 
             @Override
@@ -108,7 +110,11 @@ public class Main {
 
         try (server; db) {
             System.out.println("Server started.\nPres ENTER key to stop...");
-            System.in.read();
+            if (System.in.read() == -1) {
+                try {
+                    Thread.sleep(Long.MAX_VALUE);
+                } catch (InterruptedException ignored) { }
+            }
         }
     }
 
